@@ -191,3 +191,4 @@ application.yml
 database_config.yml
 model_config.yml
 server_config.yml
+sql.txt

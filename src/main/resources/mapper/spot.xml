@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gomson.tryangle.dao.SpotDao">
+
+    <resultMap id="SpotMap" type="Spot">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="lat" column="lat"/>
+        <result property="lon" column="lon"/>
+        <result property="name" column="name"/>
+        <collection property="imageUrlList"
+                    select="com.gomson.tryangle.dao.ImageDao.selectImageUrlBySpotId"
+                    column="{spotId=id}"/>
+    </resultMap>
+
+    <insert id="insertSpot" parameterType="Spot">
+        INSERT INTO tryangle_spot VALUES (
+            #{id},
+            #{name},
+            #{lat},
+            #{lon}
+        )
+        <selectKey resultType="Integer" keyProperty="id" keyColumn="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <select id="selectNearSpotList" resultMap="SpotMap">
+        SELECT * FROM tryangle_spot
+        WHERE lat BETWEEN #{lat} - 0.05 AND #{lat} + 0.05
+        AND lon BETWEEN #{lon} - 0.05 AND #{lon} + 0.05
+    </select>
+</mapper>
